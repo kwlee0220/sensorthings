@@ -1,0 +1,36 @@
+{
+	"ResultValue": 300,
+	"Sensor": {
+		"Navigation-Link": "Sensors(1)"
+	}
+}
+http://localhost:8080/SensorThings_V1.0/Sensors(1)?Moving-Average-Alpha=0.5
+
+{
+	"Geometry": {
+		"type": "Point",
+		"coordinates": [30.0, 30.0]
+	}
+}
+
+{
+	"Host": "AA:BB:CC:DD:EE",
+	"Description": "Test SensorNode",
+	"Metadata": "...",
+	"Location": { "Navigation-Link": "Locations(67)" }
+}|
+
+{
+	"UnitOfMeasurement": "kg",
+	"URI": "urn:weight"
+}|
+
+
+	@XmlElement(name="Thing") public LinkInfo m_thing;
+	@XmlElement(name="ObservedProperty") public LinkInfo m_property;
+	@XmlElement(name="FeatureOfInterest") public LinkInfo m_foi;
+
+	@XmlElement(name="LUID") public String m_luid;
+	@XmlElement(name="Metadata") public String m_meta;
+	@XmlElement(name="Description") public String m_desc;
+	@XmlElement(name="Moving-Average-Alpha") public float m_alpha = -1f;
