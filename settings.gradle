@@ -2,5 +2,5 @@ rootProject.name = 'sensorthings'
 
 ['utils'].each {
 	include ":$it"
-	project(":$it").projectDir = file("../../github/$it")
+	project(":$it").projectDir = file("../../common/$it")
 }
