@@ -13,10 +13,6 @@ repositories {
 		url "http://download.osgeo.org/webdav/geotools/"
 	}
     mavenCentral()
-	maven {
-		name = 'dist'
-		url = "file:${distRepositoryDir}"
-	}
 }
 
 sourceSets {
@@ -28,6 +24,7 @@ sourceSets {
 	}
 }
 
+ext.geotools_version = '17.2'
 dependencies {
 	compile project(':utils')
 
@@ -91,14 +88,6 @@ artifacts {
 	archives shadowJar
 }
 
-uploadArchives {
-	repositories {
-		mavenDeployer {
-			repository(url: "file:${distRepositoryDir}")
-		}
-	}
-}
-
 task copyJarToBin(type: Copy) {
 	dependsOn 'assemble'
 	from "${buildDir}/libs/${archivesBaseName}-${version}-all.jar"
@@ -112,6 +101,27 @@ eclipse {
 			withXml {
 				def node = it.asNode()
 				node.appendNode('classpathentry', [kind: 'output', path: 'classes'])
+			}
+			
+			whenMerged { cp ->
+				Map entryByPath = cp.entries.groupBy { entry -> entry.path }
+				entryByPath.each { key, values ->
+					if ( values.size() > 1 ) {
+            			def entry = values.first()
+            			if ( entry.kind == 'src' ) {
+            				entry.includes = []
+            				entry.excludes = []
+            			}
+            			int index = cp.entries.indexOf entry
+            			cp.entries.removeAll values
+            			cp.entries.add index, entry
+					}
+				}
+				cp.entries.each { entry ->
+					if ( entry.kind == 'src' && entry.hasProperty('output') ) {
+						entry.output = 'classes'
+					}
+				}
 			}
 		}
 	}
